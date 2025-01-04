@@ -1,5 +1,9 @@
 import express from "express";
-import { signUpDoctor, signInDoctor, getDoctorInfo } from "../controller/DoctorController.js";
+import {
+  signUpDoctor,
+  signInDoctor,
+  getDoctorInfo,
+} from "../controller/DoctorController.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import {
   addPrescription,
@@ -7,7 +11,6 @@ import {
 } from "../controller/ConsultationController.js";
 
 const router = express.Router();
-
 
 //*auth
 router.post(
@@ -17,7 +20,6 @@ router.post(
 );
 router.post("/signin", signInDoctor);
 router.post("/getinfo", getDoctorInfo);
-
 
 //*consultations
 router.get("/consultations/:doctorId", getDoctorConsultations);
