@@ -1,6 +1,7 @@
 import Patient from "../model/PatientSchema.js";
 import genrateTokenAndSetCookie from "../utils/helpers/genrateTokenAndSetCookie.js";
 import {uploadOnCloudinary} from "../utils/helpers/cloudinary.js";
+import bcrypt from "bcryptjs";
 
 const signUpPatient = async (req, res) => {
   const {
@@ -36,13 +37,15 @@ const signUpPatient = async (req, res) => {
         message: "Something went wrong while uploading profile picture.",
       });
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
 
     const newPatient = new Patient({
       profilePicture: profilePicture?.url,
       name,
       age,
       email,
-      password,
+      password: hashedPassword,
       phoneNumber,
       address,
       historyOfSurgery,
@@ -84,9 +87,12 @@ const signInPatient = async (req, res) => {
         .json({ message: "Patient does not exists, Please try to signUp" });
     }
 
-    if (password != patient.password) {
+    const isPasswordValid = await bcrypt.compare(password, patient.password);
+    if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid Password" });
     }
+ 
+
     const token = genrateTokenAndSetCookie(patient._id, res);
     res.status(201).json({
       message: "patient SignIn successfully.",
