@@ -7,7 +7,6 @@ import cors from "cors";
 import connectDB from "./mongoDB/connect.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 3000;
 
 
 const app = express();
@@ -33,7 +32,10 @@ app.use(cors(corsOptions));
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/patient", patientRoutes);
 
-connectDB(process.env.MONGODB_URL);
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "vercel") {
+  connectDB(process.env.MONGODB_URL);
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server started on PORT: ${PORT}`);
+  });
+}
