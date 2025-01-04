@@ -32,6 +32,9 @@ app.use(cors(corsOptions));
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/patient", patientRoutes);
 
+export default app;
+
+
 if (process.env.NODE_ENV !== "vercel") {
   connectDB(process.env.MONGODB_URL);
   const PORT = process.env.PORT || 5000;
